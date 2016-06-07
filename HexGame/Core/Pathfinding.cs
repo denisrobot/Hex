@@ -35,7 +35,7 @@ namespace HexGame.Core {
             this.path = new List<Node>();
         }
 
-        public List<Node> findPath(Vector2 initialNodeCoord, Vector2 goalNodeCoord) {
+        public List<Hex> findPath(Vector2 initialNodeCoord, Vector2 goalNodeCoord) {
             initialNode = new Node(initialNodeCoord);
             goalNode = new Node(goalNodeCoord);
 
@@ -60,7 +60,7 @@ namespace HexGame.Core {
 
                 if (currentNode.coordinates == goalNode.coordinates) {
                     goalNode.parent = currentNode.parent;
-                    return reconstructPath(initialNode, goalNode);
+                    return convertToHex(reconstructPath(initialNode, goalNode));
                 }
 
                 openList.Remove(currentNode);
@@ -104,7 +104,16 @@ namespace HexGame.Core {
                 path.Add(currentNode);
                 currentNode = currentNode.parent;
             }
+            Console.WriteLine(path.Count);
             return path;
+        }
+
+        private List<Hex> convertToHex(List<Node> path) {
+            List<Hex> hexPath = new List<Hex>();
+            foreach (Node node in path) {
+                hexPath.Add(new Hex((int)node.coordinates.X, (int)node.coordinates.Y, 0));
+            }
+            return hexPath;
         }
 
         private int calculateGScore(Node a, Node b) {
@@ -129,8 +138,8 @@ namespace HexGame.Core {
 
             for(int i = 0; i <= 5; i++) {
                 node.neighbours.Add(new Node(new Vector2(
-                    Hex.Neighbor(new Hex((int)node.coordinates.X, (int)node.coordinates.Y, 0), i).r,
-                    Hex.Neighbor(new Hex((int)node.coordinates.X, (int)node.coordinates.Y, 0), i).q)));
+                    Hex.Neighbor(new Hex((int)node.coordinates.X, (int)node.coordinates.Y, 0), i).q,
+                    Hex.Neighbor(new Hex((int)node.coordinates.X, (int)node.coordinates.Y, 0), i).r)));
             }
         }
     }

@@ -8,10 +8,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using HexGame.Core;
 
 namespace HexGame.Units {
     public class Unit : DrawableObject {
         private UnitStats stats;
+        private Player owner;
         private string spriteName;
         private Texture2D sprite;
         private int currentMorale;
@@ -19,6 +21,7 @@ namespace HexGame.Units {
         private bool placed;
         private Vector2 coordinates;
         private Hex currentHex;
+        private Guid id;
 
         enum States {
             Waiting,
@@ -34,41 +37,51 @@ namespace HexGame.Units {
         static public UnitStats dragoon = new UnitStats(20, 6, 3, "Dragoon");
         static public UnitStats artillery = new UnitStats(20, 2, 0, "Artillery");
 
-        public Unit(Game game, UnitStats stats, string spriteName) : base(game) {
+        public Unit(Game game, UnitStats stats, Player owner, string spriteName) : base(game) {
             this.stats = stats;
+            this.owner = owner;
             this.spriteName = spriteName;
             currentMorale = stats.BaseMorale;
             currentMove = stats.BaseMove;
             placed = false;
+            id = Guid.NewGuid();
+
+            owner.addUnit(this);
+            UnitManager.AddUnit(this);
         }
 
-        public void decreaseMorale(int amount) {
+        public void DecreaseMorale(int amount) {
             currentMorale = currentMorale - amount;
         }
-        public void increaseMorale(int amount) {
+        public void IncreaseMorale(int amount) {
             currentMorale = currentMorale + amount;
         }
-        public void modifyMorale(int h) {
+        public void ModifyMorale(int h) {
             currentMorale = h;
         }
-        public void resetMorale() {
+        public void ResetMorale() {
             currentMorale = stats.BaseMorale;
         }
-
-        public void decreaseMove(int amount) {
+        public void DecreaseMove(int amount) {
             currentMove = currentMove - amount;
         }
-        public void increaseMove(int amount) {
+        public void IncreaseMove(int amount) {
             currentMove = currentMove + amount;
         }
-        public void modifyMove(int m) {
+        public void ModifyMove(int m) {
             currentMove = m;
         }
-        public void resetMove() {
+        public void ResetMove() {
             currentMove = stats.BaseMove;
         }
+        public Guid GetID {
+            get { return id; }
+        }
+        public Player GetOwner {
+            get { return owner; }
+        }
 
-        public void placeUnit(int q, int r, int s) {
+        public void PlaceUnit(int q, int r, int s) {
             currentHex = new Hex(q, r, s);
             coordinates = Layout.HexToPixel(Game1.testLayout, currentHex);
             placed = true;

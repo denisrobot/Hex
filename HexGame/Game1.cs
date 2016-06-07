@@ -23,7 +23,6 @@ namespace HexGame
         public static Layout testLayout;
         public Grid hexGrid;
         private Pathfinding pf;
-        private Texture2D terrain;
         public static Camera camera;
         private Controls controls;
         private Player player1;
@@ -56,6 +55,15 @@ namespace HexGame
             player1 = new Player(1, "Denis");
             player2 = new Player(2, "Turner");
             player1.startTurn();
+
+            testUnit = new Unit(this, Unit.infantry, player1, "Sprites/InfantryPlaceholder.png");
+            testUnit.PlaceUnit(0, 0, 0);
+
+            foreach(KeyValuePair<Guid, Unit> entry in UnitManager.GetUnits) {
+                Console.WriteLine(entry.Key);
+                Console.WriteLine(entry.Value.GetOwner.name);
+            }
+
 
             Damage testDmg = new Damage(5, 2, 1);
 

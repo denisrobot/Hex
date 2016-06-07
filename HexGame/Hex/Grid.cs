@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using HexGame.Settings;
+using HexGame.Core;
 
 namespace HexGame {
     public class Grid : DrawableObject {
         int rows, cols;
         List<Vector2> gridTable;
-        Texture2D sprite;
+        Texture2D sprite, square;
 
         public Grid(Game game, int rows, int cols) : base(game) {
             this.rows = rows;
@@ -45,27 +41,29 @@ namespace HexGame {
             }
             return hexes;
         }
-
-        public struct HexagonalGrid {
-            public int radius;
-
-            public HexagonalGrid(int radius) {
-                this.radius = radius;
-            }
-
-            public static List<Vector2> getTable(int radius) {
-                List<Vector2> gridTable = new List<Vector2>();
-                for (int r = -radius; r <= radius; r++) {
-                    for (int q = -radius; q <= radius; q++) {
-                        gridTable.Add(new Vector2(r, q));
-                    }
-                }
-                return gridTable;
+        
+        public void DrawPath(SpriteBatch sb, List<Hex> path) {
+            foreach(Hex hex in path) {
+                spriteBatch.Draw(
+                    square,
+                    Layout.HexToPixel(Game1.testLayout, hex),
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(square.Width / 2f, square.Height / 2f),
+                    Game1.testLayout.size / square.Width,
+                    SpriteEffects.None,
+                    0f);
             }
         }
 
         protected override void LoadContent() {
             sprite = Game.Content.Load<Texture2D>("hex_forest.png");
+            square = Game.Content.Load<Texture2D>("Sprites/square.png");
+        }
+
+        public override void Update(GameTime gameTime) {
+            base.Update(gameTime);
         }
 
         public override void drawObject(SpriteBatch spriteBatch) {
@@ -91,6 +89,35 @@ namespace HexGame {
                     SpriteEffects.None,
                     0f);
             }
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed) {
+                Pathfinding pathfinding = new Pathfinding(this);
+                Hex destHex = FractionalHex.HexRound(
+                Layout.PixelToHex(Game1.testLayout, new Vector2(
+                    Controls.getMousePosition().X, Controls.getMousePosition().Y)));
+                List<Hex> path = pathfinding.findPath(
+                    new Vector2(0, 0), 
+                    new Vector2(destHex.q, destHex.r));
+                DrawPath(spriteBatch, path);
+            }
         }
+
+    }        
+}
+
+public struct HexagonalGrid {
+    public int radius;
+
+    public HexagonalGrid(int radius) {
+        this.radius = radius;
+    }
+
+    public static List<Vector2> getTable(int radius) {
+        List<Vector2> gridTable = new List<Vector2>();
+        for (int r = -radius; r <= radius; r++) {
+            for (int q = -radius; q <= radius; q++) {
+                gridTable.Add(new Vector2(r, q));
+            }
+        }
+        return gridTable;
     }
 }

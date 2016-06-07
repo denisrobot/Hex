@@ -14,6 +14,7 @@ namespace HexGame.Settings {
 
         public void Update() {
             KeyboardState currentState = Keyboard.GetState();
+            MouseState mouseState = Mouse.GetState();
 
             /* End current player's turn after Space is pressed. */
             if (currentState.IsKeyDown(Keys.Space) && previousState.IsKeyUp(Keys.Space)) {
