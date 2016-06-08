@@ -18,7 +18,7 @@ namespace HexGame.Settings {
 
             /* End current player's turn after Space is pressed. */
             if (currentState.IsKeyDown(Keys.Space) && previousState.IsKeyUp(Keys.Space)) {
-                TurnManager.changeTurn();
+                TurnManager.ChangeTurn();
             }
             previousState = currentState;
         }

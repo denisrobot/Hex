@@ -7,28 +7,21 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace HexGame.Core {
+namespace HexGame.UI {
     class Line {
-        private GraphicsDevice graphicsDevice;
-        private SpriteBatch spriteBatch;
 
-        public Line(SpriteBatch sb, GraphicsDevice gd) {
-            this.spriteBatch = sb;
-            this.graphicsDevice = gd;
-        }
-
-        private Texture2D createPixel() {
-            Texture2D pixel = new Texture2D(this.graphicsDevice, 1, 1);
+        private static Texture2D createPixel(GraphicsDevice graphicsDevice) {
+            Texture2D pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.Black });
 
             return pixel;
         }
 
-        public void Draw(Vector2 start, Vector2 end) {
+        public static void Draw(SpriteBatch spriteBatch, GraphicsDevice gd, Vector2 start, Vector2 end) {
             Vector2 edge = end - start;
 
             float angle = (float)Math.Atan2(edge.Y, edge.X);
-            spriteBatch.Draw(createPixel(),
+            spriteBatch.Draw(createPixel(gd),
                 new Rectangle(
                     (int)start.X,
                     (int)start.Y,

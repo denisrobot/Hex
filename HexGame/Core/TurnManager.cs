@@ -7,12 +7,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HexGame.Core {
     public class TurnManager {
+        public static Player currentTurn;
 
-        public static void startTurn(Player player) {
+        public static void StartTurn(Player player) {
             player.startTurn();
         }
 
-        public static void changeTurn() {
+        public static void ChangeTurn() {
             int playerCount = Game1.players.Count;
             for (int i = 0; i < playerCount; i++) {
                 if (Game1.players[i].isInTurn()) {

@@ -32,6 +32,7 @@ namespace HexGame.Core {
 
         public void startTurn() {
             turn = true;
+            TurnManager.currentTurn = this;
             Console.WriteLine(name + "'s turn");
         }
 

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using HexGame.Settings;
 using HexGame.Units;
 using HexGame.Core;
-
+using HexGame.UI;
 
 namespace HexGame
 {
@@ -20,17 +20,23 @@ namespace HexGame
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private VideoSettings videoSettings;
+        public static List<DrawableObject> drawableGameObjects;
+        public static List<DrawableUIObject> drawableUIObjects;
+
+        public static Camera camera;
+        private Controls controls;
+        public static List<Player> players;
+
         public static Layout testLayout;
         public Grid hexGrid;
         private Pathfinding pf;
-        public static Camera camera;
-        private Controls controls;
         private Player player1;
         private Player player2;
         private Unit testUnit;
 
-        public static List<DrawableObject> drawableGameObjects;
-        public static List<Player> players;
+        private TextElement testText1;
+        private TextElement testText2;
+
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -43,8 +49,10 @@ namespace HexGame
 
         protected override void Initialize() {
             videoSettings.setResolution(1280, 800);
+            //videoSettings.setFullscreen();
             camera = new Camera(videoSettings.getResolution().X, videoSettings.getResolution().Y);
             drawableGameObjects = new List<DrawableObject>();
+            drawableUIObjects = new List<DrawableUIObject>();
             this.IsMouseVisible = true;
 
             testLayout = new Layout(Layout.flat, new Vector2(30, 30), new Vector2(100, 100));
@@ -64,9 +72,15 @@ namespace HexGame
                 Console.WriteLine(entry.Value.GetOwner.name);
             }
 
+            testText1 = new TextElement(this, 200, 30, Vector2.Zero, FontManager.R15(this), null);
+            testText1.BackgroundColor = Color.LightGray;
+            testText1.Text = "LOL 1";
 
-            Damage testDmg = new Damage(5, 2, 1);
-
+            testText2 = new TextElement(this, 300, 300, new Vector2(500, 500), FontManager.R12(this), testText1);
+            testText2.BackgroundColor = Color.Black;
+            testText2.Text = "LOL 2";
+            testText2.AlignWithParent(Vector2.Zero);
+            testText2.AddPadding(0, 0, 0, 0);
             base.Initialize();
         }
 
@@ -85,8 +99,13 @@ namespace HexGame
             camera.enableControls();
             controls.Update();
             hexGrid.Visible = true;
+            testText1.Visible = true;
+            testText2.Visible = true;
             //testUnit.Visible = true;
             //testUnit.Enabled = true;
+            if (TurnManager.currentTurn != null) {
+                testText1.Text = "Current turn: " + TurnManager.currentTurn.name;
+            }
             base.Update(gameTime);
         }
 
@@ -100,6 +119,11 @@ namespace HexGame
             foreach (DrawableObject drawableObject in drawableGameObjects) {
                 if (drawableObject.Visible) {
                     drawableObject.Draw(gameTime);
+                }
+            }
+            foreach(DrawableUIObject drawableUIObject in drawableUIObjects) {
+                if (drawableUIObject.Visible) {
+                    drawableUIObject.Draw(gameTime);
                 }
             }
             spriteBatch.End();

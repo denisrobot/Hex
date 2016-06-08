@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Battle\Die.cs" />
     <Compile Include="Battle\Damage.cs" />
+    <Compile Include="Components\DrawableUIObject.cs" />
+    <Compile Include="Core\GameState.cs" />
     <Compile Include="Core\Pathfinding.cs" />
     <Compile Include="Core\Player.cs" />
     <Compile Include="Core\UnitManager.cs" />
@@ -53,7 +55,9 @@
     <Compile Include="Hex\FractionalHex.cs" />
     <Compile Include="Hex\Grid.cs" />
     <Compile Include="Hex\Layout.cs" />
-    <Compile Include="Core\Line.cs" />
+    <Compile Include="UI\BasicUIElement.cs" />
+    <Compile Include="UI\FontManager.cs" />
+    <Compile Include="UI\Line.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\Controls.cs" />
@@ -110,9 +114,7 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Content\Fonts\debug">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
