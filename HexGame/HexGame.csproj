@@ -47,6 +47,9 @@
     <Compile Include="Core\GameState.cs" />
     <Compile Include="Core\Pathfinding.cs" />
     <Compile Include="Core\Player.cs" />
+    <Compile Include="Core\MoveManager.cs" />
+    <Compile Include="Core\GameManager.cs" />
+    <Compile Include="Core\UIManager.cs" />
     <Compile Include="Core\UnitManager.cs" />
     <Compile Include="Settings\Camera.cs" />
     <Compile Include="Components\DrawableObject.cs" />
@@ -56,6 +59,7 @@
     <Compile Include="Hex\Grid.cs" />
     <Compile Include="Hex\Layout.cs" />
     <Compile Include="UI\BasicUIElement.cs" />
+    <Compile Include="UI\BoxUIElement.cs" />
     <Compile Include="UI\FontManager.cs" />
     <Compile Include="UI\Line.cs" />
     <Compile Include="Program.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="Settings\Controls.cs" />
     <Compile Include="Settings\VideoSettings.cs" />
     <Compile Include="Core\TurnManager.cs" />
+    <Compile Include="UI\TextUIElement.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="Units\UnitStats.cs" />
     <Compile Include="Units\Weapon.cs" />
@@ -99,7 +104,19 @@
     <Content Include="Content\pixel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\hex_forest.png">
+    <Content Include="Content\Sprites\grass.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\hex_grass_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\hex_grass_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\hex_grass_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\hex_grass_4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Sprites\InfantryPlaceholder.png">

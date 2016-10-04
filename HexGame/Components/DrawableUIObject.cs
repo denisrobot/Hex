@@ -16,7 +16,7 @@ namespace HexGame {
 
         public DrawableUIObject(Game game) : base(game) {
             spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
-            Game1.drawableUIObjects.Add(this);
+            GameManager.drawableUIObjects.Add(this);
             Game.Components.Add(this);
         }
 

@@ -104,7 +104,6 @@ namespace HexGame.Core {
                 path.Add(currentNode);
                 currentNode = currentNode.parent;
             }
-            Console.WriteLine(path.Count);
             return path;
         }
 

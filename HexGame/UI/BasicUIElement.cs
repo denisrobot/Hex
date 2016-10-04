@@ -8,14 +8,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HexGame.UI {
     class BasicUIElement : DrawableUIObject {
+        private const int DEFAULT_WIDTH = 100;
+        private const int DEFAULT_HEIGHT = 100;
+        private const int DEFAULT_X_POS = 0;
+        private const int DEFAULT_Y_POS = 0;
+
         public int width, height;
         public Vector2 position;
         public BasicUIElement parent;
 
-        public BasicUIElement(Game game, int width, int height, Vector2 position, BasicUIElement parent) : base(game) {
-            this.width = width;
-            this.height = height;
-            this.position = position;
+        public BasicUIElement(Game game, BasicUIElement parent = null) : base(game) {
+            width = DEFAULT_WIDTH;
+            height = DEFAULT_HEIGHT;
+            position = new Vector2(DEFAULT_X_POS, DEFAULT_Y_POS);
             this.parent = parent;
         }
 
@@ -30,13 +35,35 @@ namespace HexGame.UI {
             position.Y = position.Y + paddingTop;
         }
 
-        public void AlignWithParent(Vector2 offset) {
+        public void AlignWithParent() {
             if (parent != null) {
-                position.X = parent.position.X + offset.X;
-                position.Y = parent.position.Y + offset.Y;
+                SetPosition(new Vector2(parent.position.X, parent.position.Y));
             } else {
                 Console.WriteLine("Could not align with parent. Make sure parent object is provided.");
             }
+        }
+
+        public void ResizeToParent() {
+            if (parent != null) {
+                width = parent.width;
+                height = parent.height;
+            } else {
+                Console.WriteLine("Could resize to parent. Make sure parent object is provided.");
+            }
+        }
+
+        public void Resize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public void SetPosition(Vector2 position) {
+            this.position = position;
+        }
+
+        public void ApplyOffset(Vector2 offset) {
+            position.X += offset.X;
+            position.Y += offset.Y;
         }
 
         public void DrawTopBorder() {
@@ -61,41 +88,5 @@ namespace HexGame.UI {
         }
 
         public override void DrawObject(SpriteBatch spriteBatch) { }
-
-
-    }
-
-    class TextElement : BasicUIElement {
-        private SpriteFont font;
-        public string Text { get; set; }
-        public Texture2D backgroundTexture;
-        public Color BackgroundColor { get; set; }
-
-        public TextElement(Game game, int width, int height, Vector2 position, SpriteFont font, BasicUIElement parent) :
-            base(game, width, height, position, parent) {
-            this.font = font;
-        }
-
-        protected override void LoadContent() {
-            backgroundTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
-            backgroundTexture.SetData<Color>(new Color[] { Color.White });
-            base.LoadContent();
-        }
-
-        public override void DrawObject(SpriteBatch spriteBatch) {
-            Vector2 stringSize = font.MeasureString(Text);
-            if (BackgroundColor != null) {
-                spriteBatch.Draw(backgroundTexture, PositionRectangle, BackgroundColor);
-            }
-            spriteBatch.DrawString(font, Text,
-                new Vector2(
-                    position.X,
-                    position.Y),
-                Color.Black);
-            //Line.Draw(spriteBatch, Game.GraphicsDevice,
-            //    new Vector2(position.X, position.Y + stringSize.Y),
-            //    new Vector2(position.X + width, position.Y + stringSize.Y));
-            base.DrawObject(spriteBatch);
-        }
     }
 }

@@ -65,7 +65,7 @@ namespace HexGame {
         }
 
         public float GetWidth() { 
-            return (float)Math.Sqrt(3) / 2f* GetHeight();
+            return (float)Math.Sqrt(3) / 2f * GetHeight();
         }
     }
 

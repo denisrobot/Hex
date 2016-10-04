@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using HexGame.Settings;
+using HexGame.Core;
 
 namespace HexGame {
     public abstract class DrawableObject : DrawableGameComponent {
@@ -20,13 +21,13 @@ namespace HexGame {
 
         public DrawableObject(Game game) : base(game) {
             spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
-            Game1.drawableGameObjects.Add(this);
+            GameManager.drawableGameObjects.Add(this);
             Game.Components.Add(this);
         }
 
         public override void Initialize() {
-            this.Enabled = false;
-            this.Visible = false;
+            this.Enabled = true;
+            this.Visible = true;
             base.Initialize();
         }
 
@@ -45,7 +46,7 @@ namespace HexGame {
         public override void Draw(GameTime gameTime) {
             spriteBatch.Begin(SpriteSortMode.Immediate,
                     null, null, null, null, null,
-                    Game1.camera.getTransform());
+                    GameManager.camera.getTransform());
             drawObject(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 using HexGame.Settings;
+using HexGame.Units;
 using HexGame.Core;
 
 namespace HexGame {
@@ -10,11 +13,17 @@ namespace HexGame {
         int rows, cols;
         List<Vector2> gridTable;
         Texture2D sprite, square;
+        List<Hex> path;
+        List<Texture2D> spriteList;
+        Random rnd;
 
         public Grid(Game game, int rows, int cols) : base(game) {
             this.rows = rows;
             this.cols = cols;
-            this.gridTable = new List<Vector2>();
+            gridTable = new List<Vector2>();
+            spriteList = new List<Texture2D>();
+            rnd = new Random();
+            path = null;
             fillTable();
 
         }
@@ -25,7 +34,8 @@ namespace HexGame {
         public int ColsCount {
             get { return cols; }
         }
-
+        // TODO: missing s coordinate is causing some problems:
+        // for example adding a unit to 7,7,7 actually puts it to the hex 7,7,-14
         private void fillTable() {
             for (int r = 0; r < rows; r++) {
                 for (int q = 0; q < cols; q++) {
@@ -41,24 +51,28 @@ namespace HexGame {
             }
             return hexes;
         }
-        
-        public void DrawPath(SpriteBatch sb, List<Hex> path) {
-            foreach(Hex hex in path) {
-                spriteBatch.Draw(
-                    square,
-                    Layout.HexToPixel(Game1.testLayout, hex),
-                    null,
-                    Color.White,
-                    0f,
-                    new Vector2(square.Width / 2f, square.Height / 2f),
-                    Game1.testLayout.size / square.Width,
-                    SpriteEffects.None,
-                    0f);
-            }
+
+        public Hex GetCurrentMouseHoverHex() {
+            Hex currentHex = FractionalHex.HexRound(
+                Layout.PixelToHex(GameManager.gridLayout, new Vector2(
+                    Controls.getMousePosition().X, Controls.getMousePosition().Y)));
+            return currentHex;
         }
 
+        public void SetUnitPath(List<Hex> path) {
+            this.path = path;
+        }
+
+        public void ClearUnitPath() {
+            path = null;
+        }
+        
         protected override void LoadContent() {
-            sprite = Game.Content.Load<Texture2D>("hex_forest.png");
+            spriteList.Add(Game.Content.Load<Texture2D>("Sprites/hex_grass_1.png"));
+            spriteList.Add(Game.Content.Load<Texture2D>("Sprites/hex_grass_2.png"));
+            spriteList.Add(Game.Content.Load<Texture2D>("Sprites/hex_grass_3.png"));
+            spriteList.Add(Game.Content.Load<Texture2D>("Sprites/hex_grass_4.png"));
+            sprite = Game.Content.Load<Texture2D>("Sprites/hex_grass_1.png");
             square = Game.Content.Load<Texture2D>("Sprites/square.png");
         }
 
@@ -67,37 +81,64 @@ namespace HexGame {
         }
 
         public override void drawObject(SpriteBatch spriteBatch) {
-            Hex currentHex = FractionalHex.HexRound(
-                Layout.PixelToHex(Game1.testLayout, new Vector2(
-                    Controls.getMousePosition().X, Controls.getMousePosition().Y)));
+            /* Drawing hex hover */
+            Hex currentHex = GetCurrentMouseHoverHex();
             for (int i = 0; i < getHexes().Count; i++) {
                 Color color = new Color();
 
                 if (getHexes()[i].q == currentHex.q && getHexes()[i].r == currentHex.r) {
-                    color = Color.Red;
+                    color = Color.Blue;
                 } else {
                     color = Color.White;
                 }
                 spriteBatch.Draw(
                     sprite,
-                    Layout.HexToPixel(Game1.testLayout, getHexes()[i]),
+                    Layout.HexToPixel(GameManager.gridLayout, getHexes()[i]),
                     null,
                     color,
                     0f,
                     new Vector2(sprite.Width / 2f, sprite.Height / 2f),
-                     Game1.testLayout.size / sprite.Width * 2,
+                    GameManager.gridLayout.size / sprite.Width * 2f,
                     SpriteEffects.None,
                     0f);
             }
+
+            /* Registering grid mouse clicks. To be moved to Controls */
             if (Mouse.GetState().LeftButton == ButtonState.Pressed) {
-                Pathfinding pathfinding = new Pathfinding(this);
-                Hex destHex = FractionalHex.HexRound(
-                Layout.PixelToHex(Game1.testLayout, new Vector2(
-                    Controls.getMousePosition().X, Controls.getMousePosition().Y)));
-                List<Hex> path = pathfinding.findPath(
-                    new Vector2(0, 0), 
-                    new Vector2(destHex.q, destHex.r));
-                DrawPath(spriteBatch, path);
+
+                Hex clickedHex = FractionalHex.HexRound(
+                    Layout.PixelToHex(
+                        GameManager.gridLayout,
+                        new Vector2(Controls.getMousePosition().X, Controls.getMousePosition().Y)
+                    )
+                );
+                Unit currentUnit = UnitManager.GetCurrentUnit();
+                if (currentUnit.State == Unit.States.Moving) {
+                    MoveManager.MoveUnit(currentUnit, clickedHex);                
+                } else {
+                    UnitManager.SelectUnitByHex(clickedHex);
+                }
+            }
+
+            /* Drawing unit move path */
+            // TODO: this should be moved somewhere else.
+            if (path != null) {
+                Color color = Color.Green;
+                for (int i = 0; i < path.Count; i++) {
+                    if (i > UnitManager.GetCurrentUnit().CurrentMove()) {
+                        color = Color.Red;
+                    } 
+                    spriteBatch.Draw(
+                        sprite,
+                        Layout.HexToPixel(GameManager.gridLayout, path[i]),
+                        null,
+                        color,
+                        0f,
+                        new Vector2(sprite.Width / 2f, sprite.Height / 2f),
+                         GameManager.gridLayout.size / sprite.Width * 2,
+                        SpriteEffects.None,
+                        0f);
+                }
             }
         }
 

@@ -8,17 +8,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HexGame.Settings {
     public class Camera {
-        //Constants
         private const float ZOOM_SPEED = 0.02f;
         private const float CAMERA_SPEED = 15f;
 
-        //Variables
         private Matrix transform;
         public Vector2 Position;
         public Vector2 Offset;
         private Point Resolution;
         public KeyboardState currentKeyboardState;
         public KeyboardState previousKeyboardState;
+        public MouseState currentMouseState;
+        public MouseState previousMouseState;
         private float leftBorder, rightBorder, topBorder, bottomBorder;
         private float rotation;
         public float zoom, maxZoom, minZoom;
@@ -58,10 +58,11 @@ namespace HexGame.Settings {
 
         public void enableControls() {
             currentKeyboardState = Keyboard.GetState();
+            currentMouseState = Mouse.GetState();
 
-            if (currentKeyboardState.IsKeyDown(Keys.Q)) {
+            if (currentKeyboardState.IsKeyDown(Keys.Q) || (currentMouseState.ScrollWheelValue < previousMouseState.ScrollWheelValue)) {
                 zoom += ZOOM_SPEED;
-            } else if (currentKeyboardState.IsKeyDown(Keys.E)) {
+            } else if (currentKeyboardState.IsKeyDown(Keys.E) || (currentMouseState.ScrollWheelValue > previousMouseState.ScrollWheelValue)) {
                 zoom -= ZOOM_SPEED;
             }
             if (currentKeyboardState.IsKeyDown(Keys.A)) {
@@ -85,6 +86,7 @@ namespace HexGame.Settings {
             }
 
             previousKeyboardState = currentKeyboardState;
+            previousMouseState = currentMouseState;
         }
 
         public Matrix getTransform() {

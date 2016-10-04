@@ -9,13 +9,14 @@ namespace HexGame.Units {
         private int baseMorale;
         private int baseMove;
         private int baseCost;
-        private string type;
+        private string type, spriteName;
 
-        public UnitStats(int baseMorale, int baseMove, int baseCost, string type) {
+        public UnitStats(int baseMorale, int baseMove, int baseCost, string type, string spriteName) {
             this.baseMorale = baseMorale;
             this.baseMove = baseMove;
             this.baseCost = baseCost;
             this.type = type;
+            this.spriteName = spriteName;
         }
 
         public int BaseMorale {
@@ -32,6 +33,10 @@ namespace HexGame.Units {
 
         public string Type {
             get { return type; }
+        }
+
+        public string SpriteName {
+            get { return spriteName; }
         }
     }
 }

@@ -243,3 +243,7 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/HexGame/Content/Sprites/hex_grass_4.png
+/HexGame/Content/Sprites/hex_grass_3.png
+/HexGame/Content/Sprites/hex_grass_2.png
+/HexGame/Content/Sprites/grass.png

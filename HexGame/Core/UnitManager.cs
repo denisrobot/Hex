@@ -32,5 +32,25 @@ namespace HexGame.Core {
                 return null;
             }
         }
+
+        public static void SelectUnitByHex(Hex hex, bool preventNonTurnSelection=true) {
+            foreach (KeyValuePair<Guid, Unit> unit in GetUnits) {
+                if (Hex.Equal(unit.Value.GetCurrentHex(), hex)) {
+                    if (preventNonTurnSelection && unit.Value.GetOwner == TurnManager.currentTurn) {
+                        SetCurrentUnit(unit.Value);
+                    } else if (!preventNonTurnSelection) {
+                        SetCurrentUnit(unit.Value);
+                    }
+                }
+            }
+        }
+
+        public static void SetCurrentUnit(Unit unit) {
+            selectedUnit = unit;
+        }
+
+        public static Unit GetCurrentUnit() {
+            return selectedUnit;
+        }
     }
 }

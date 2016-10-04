@@ -18,7 +18,7 @@ namespace HexGame {
         }
 
         static public bool Equal(Hex a, Hex b) {
-            return a.q == b.q && a.r == b.r && a.s == b.s;
+            return a.q == b.q && a.r == b.r;
         }
 
         static public Hex Add(Hex a, Hex b) {
